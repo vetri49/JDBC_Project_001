@@ -1,7 +1,9 @@
 package com.simplilearn.webapp.DB;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -11,6 +13,8 @@ public class DataBaseConnection {
 	Connection con=null;
 	Statement statement=null;
 	ResultSet rst=null;
+	PreparedStatement prepstm=null;
+	CallableStatement callstm=null;
 	public Connection init() {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -104,6 +108,59 @@ public class DataBaseConnection {
 			}
 			
 			
+		}
+		public int executeUpdatePrepstmt(String query,String ... args) {
+			int rowsAffected=0;
+			try {
+				prepstm=con.prepareStatement(query);
+				System.out.println("3.Prepared statement is created.");
+				prepstm.setString(1, args[0]);
+				prepstm.setString(2, args[1]);
+				prepstm.setString(3, args[2]);
+				rowsAffected=prepstm.executeUpdate();
+			} catch (SQLException e) {
+				System.out.println("Exception Occured ::: " + e.getClass());
+				e.printStackTrace();
+			} finally {
+				// clean up
+				try {
+					prepstm.close();
+				} catch (SQLException e) {
+					System.out.println("Exception Occured ::: " + e.getClass());
+				}
+
+			}
+			return rowsAffected;
+		}
+		public int executeUpdateCallStm(String query, String... args) {
+			int rowsAffected = 0;
+			try {
+				// step3 : Create a callable statement
+				callstm = con.prepareCall(query);
+				System.out.println("3. Callable Statement is created.");
+				
+				// set parameters for prepare callstm
+				// set product name
+				callstm.setString(1, args[0]);
+				// set product desc
+				callstm.setString(2, args[1]);
+				// set product price
+				callstm.setString(3, args[2]);
+				
+				rowsAffected = callstm.executeUpdate();
+			} catch (SQLException e) {
+				System.out.println("Exception Occured ::: " + e.getClass());
+				e.printStackTrace();
+			} finally {
+				// clean up
+				try {
+					callstm.close();
+				} catch (SQLException e) {
+					System.out.println("Exception Occured ::: " + e.getClass());
+				}
+
+			}
+			return rowsAffected;
 		}
 	}
 	

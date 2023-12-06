@@ -19,6 +19,7 @@ public class Initcontroller extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request,HttpServletResponse response) throws IOException {
 		 response.setContentType("text/html");
+		// response.sendRedirect("index.jsp");
 		 PrintWriter out=response.getWriter();
 		 DataBaseConnection con=new DataBaseConnection();
 		 con.jdbcOperation();
